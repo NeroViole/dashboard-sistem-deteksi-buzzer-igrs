@@ -834,8 +834,8 @@ with tab3:
             if cl_data["tweets"]:
                 st.markdown('<div style="font-size:12px; font-weight:600; color:#9B4A2C; margin-top:8px; margin-bottom:6px;">Top 3 Tweet:</div>', unsafe_allow_html=True)
                 for tw in cl_data["tweets"]:
-                    badge = "🚨 Buzzer" if tw.get("is_coordinated") == 1 else "🟢 Non-Buzzer"
-                    badge_color = BUZZER if tw.get("is_coordinated") == 1 else ORGANIC
+                    badge = "🚨 Buzzer" if tw.get("buzzer_flag") == 1 else "🟢 Non-Buzzer"
+                    badge_color = BUZZER if tw.get("buzzer_flag") == 1 else ORGANIC
                     st.markdown(
                         f'<div style="font-size:12px; line-height:1.45; color:#211E17; margin-bottom:8px; padding:8px; background:#FBF9F3; border-radius:4px; border-left:3px solid {badge_color};">'
                         f'<span style="font-size:10px; font-weight:bold; color:{badge_color}; margin-right:8px; font-family:\'DM Mono\',monospace;">{badge}</span>'
@@ -848,8 +848,8 @@ with tab3:
             if cl_data["more_tweets"]:
                 with st.expander("Tampilkan Sisa Tweet Lainnya"):
                     for tw in cl_data["more_tweets"]:
-                        badge = "🚨 Buzzer" if tw.get("is_coordinated") == 1 else "🟢 Non-Buzzer"
-                        badge_color = BUZZER if tw.get("is_coordinated") == 1 else ORGANIC
+                        badge = "🚨 Buzzer" if tw.get("buzzer_flag") == 1 else "🟢 Non-Buzzer"
+                        badge_color = BUZZER if tw.get("buzzer_flag") == 1 else ORGANIC
                         st.markdown(
                             f'<div style="font-size:11px; line-height:1.4; color:#211E17; margin-bottom:6px; padding:6px; background:#F5F1E6; border-radius:4px; border-left:2px solid {badge_color};">'
                             f'<span style="font-size:9px; font-weight:bold; color:{badge_color}; margin-right:8px; font-family:\'DM Mono\',monospace;">{badge}</span>'
@@ -998,7 +998,7 @@ with tab4:
     
     fign.update_xaxes(visible=False, showgrid=False, zeroline=False)
     fign.update_yaxes(visible=False, showgrid=False, zeroline=False)
-    fign.update_layout(showlegend=True)
+    fign.update_layout(clickmode="event+select", showlegend=True)
     
     # Initialize session state for chart key versioning to allow resetting selection
     if "sna_chart_version" not in st.session_state:
@@ -1204,6 +1204,7 @@ with tab4:
     
     figtm = style(figtm, 340, "Timeline Aktivitas per Jam")
     figtm.update_layout(
+        clickmode="event+select",
         showlegend=True,
         xaxis_title="Waktu (WIB)",
         yaxis_title="Jumlah",
@@ -1234,8 +1235,16 @@ with tab4:
         
     st.markdown('<div style="height: 1px; background-color: rgba(38,33,25,0.13); margin: 25px 0 20px 0;"></div>', unsafe_allow_html=True)
     
-    if selected_time_str:
-        selected_time = pd.to_datetime(selected_time_str)
+    if selected_time_str is not None:
+        try:
+            # Safely parse string datetimes or numeric epoch millisecond values from Plotly
+            if isinstance(selected_time_str, (int, float)) or str(selected_time_str).isdigit():
+                selected_time = pd.to_datetime(int(selected_time_str), unit="ms")
+            else:
+                selected_time = pd.to_datetime(selected_time_str)
+        except Exception:
+            selected_time = pd.to_datetime(selected_time_str)
+            
         if selected_time.tz is None:
             selected_time = selected_time.tz_localize("Asia/Jakarta").tz_convert("UTC")
         else:
@@ -1252,7 +1261,7 @@ with tab4:
         )
         
         tot = len(subset)
-        buzz = int((subset["is_coordinated"] == 1).sum())
+        buzz = int((subset["buzzer_flag"] == 1).sum())
         org = tot - buzz
         
         m = st.columns(3)
@@ -1265,7 +1274,7 @@ with tab4:
             sub_display["Waktu"] = pd.to_datetime(sub_display["created_at"]).dt.strftime("%H:%M:%S")
             sub_display["Akun"] = sub_display["username"].apply(lambda u: f"@{u}")
             sub_display["Profil X"] = sub_display["username"].apply(lambda u: f"https://x.com/{u}")
-            sub_display["Kategori"] = sub_display["is_coordinated"].apply(lambda x: "🚨 Buzzer" if x == 1 else "🟢 Non-Buzzer")
+            sub_display["Kategori"] = sub_display["buzzer_flag"].apply(lambda x: "🚨 Buzzer" if x == 1 else "🟢 Non-Buzzer")
             
             sub_display = sub_display.rename(columns={
                 "clean_text": "Isi Tweet",
