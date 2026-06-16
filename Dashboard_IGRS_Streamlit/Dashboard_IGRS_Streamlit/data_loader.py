@@ -311,6 +311,13 @@ def load_clusters():
     # Load tweets from clustered_tweets.csv
     try:
         tweets_df = _read("clustered_tweets.csv").dropna(subset=["full_text"])
+        try:
+            scored_df = _read("tweets_scored.csv")[["id_str", "buzzer_prob", "buzzer_flag"]]
+            tweets_df["id_str"] = tweets_df["id_str"].astype(str).str.strip()
+            scored_df["id_str"] = scored_df["id_str"].astype(str).str.strip()
+            tweets_df = tweets_df.merge(scored_df, on="id_str", how="left")
+        except Exception:
+            pass
     except Exception:
         tweets_df = pd.DataFrame()
         
@@ -319,11 +326,14 @@ def load_clusters():
         # Group by cluster_id
         for cid, group in tweets_df.groupby("cluster_id"):
             cid = int(cid)
-            # Sort by is_coordinated descending, then favorite_count descending
+            # Sort by buzzer_flag descending, then favorite_count descending
             group_sorted = group.copy()
             sort_cols = []
             ascending = []
-            if "is_coordinated" in group_sorted.columns:
+            if "buzzer_flag" in group_sorted.columns:
+                sort_cols.append("buzzer_flag")
+                ascending.append(False)
+            elif "is_coordinated" in group_sorted.columns:
                 sort_cols.append("is_coordinated")
                 ascending.append(False)
             if "favorite_count" in group_sorted.columns:
@@ -341,7 +351,8 @@ def load_clusters():
                 tweets_list.append({
                     "username": str(tr["username"]),
                     "text": str(tr["full_text"]),
-                    "is_coordinated": int(tr["is_coordinated"]) if "is_coordinated" in tr else 0
+                    "is_coordinated": int(tr["is_coordinated"]) if "is_coordinated" in tr else 0,
+                    "buzzer_flag": int(tr["buzzer_flag"]) if "buzzer_flag" in tr and not pd.isna(tr["buzzer_flag"]) else (1 if tr.get("buzzer_prob", 0.0) >= 0.85 else 0)
                 })
             cluster_tweets[cid] = tweets_list
             
