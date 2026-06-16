@@ -228,6 +228,20 @@ ul[role="listbox"] li:hover {
 [data-testid="stPlotlyChart"] {
     background-color: transparent !important;
 }
+
+/* Force all buttons to have consistent ACCENT background and white text */
+div[data-testid="stButton"] button {
+    background-color: #9B4A2C !important;
+    color: #FFFFFF !important;
+    border: 1px solid #9B4A2C !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease !important;
+}
+div[data-testid="stButton"] button:hover {
+    background-color: #A8472F !important;
+    border-color: #A8472F !important;
+    color: #FFFFFF !important;
+}
 """
 
 st.markdown("<style>" + CSS + "</style>", unsafe_allow_html=True)
