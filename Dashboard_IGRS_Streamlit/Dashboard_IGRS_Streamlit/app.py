@@ -186,7 +186,7 @@ input, textarea, select {
 /* Selectbox dropdown menu */
 [data-baseweb="select"] span,
 [data-baseweb="select"] div {
-    color: #211E17 !important;
+    color: #FFFFFF !important;
 }
 [data-baseweb="popover"],
 [data-baseweb="menu"],
