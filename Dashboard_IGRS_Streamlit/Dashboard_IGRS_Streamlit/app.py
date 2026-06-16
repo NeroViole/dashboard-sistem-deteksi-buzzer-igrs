@@ -36,6 +36,15 @@ CLUSTER_NAMES = {
 
 CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+/* Force Streamlit CSS Variables to Light Theme values */
+:root, [data-testid="stAppViewContainer"], .stApp, html, body {
+    --background-color: #F3EFE6 !important;
+    --secondary-background-color: #EFEADD !important;
+    --text-color: #211E17 !important;
+    --primary-color: #9B4A2C !important;
+}
+
 .stApp { background: #F3EFE6; }
 .block-container { max-width: 1180px; padding-top: 2.2rem; padding-bottom: 4rem; }
 html, body, [class*="css"] { font-family: 'Inter', system-ui, sans-serif; color: #211E17; }
