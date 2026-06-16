@@ -139,9 +139,9 @@ caption {
 input, textarea, select {
     color: #211E17 !important;
 }
-::placeholder {
+input::placeholder, textarea::placeholder {
     color: #4D473B !important;
-    opacity: 0.85;
+    opacity: 0.85 !important;
 }
 
 /* ── Force light-mode pada SEMUA elemen Streamlit (fix Streamlit Cloud dark-mode) ── */
@@ -183,10 +183,28 @@ input, textarea, select {
     color: #211E17 !important;
 }
 
-/* Selectbox dropdown menu */
+/* Selectbox and Text Input styling (Default / Light Mode) */
 [data-baseweb="select"] span,
 [data-baseweb="select"] div {
-    color: #FFFFFF !important;
+    color: #211E17 !important;
+}
+input, textarea {
+    color: #211E17 !important;
+}
+
+/* Dark Mode overrides for inputs when browser prefers dark theme */
+@media (prefers-color-scheme: dark) {
+    [data-baseweb="select"] span,
+    [data-baseweb="select"] div {
+        color: #FFFFFF !important;
+    }
+    input, textarea {
+        color: #FFFFFF !important;
+    }
+    input::placeholder, textarea::placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+        opacity: 1 !important;
+    }
 }
 [data-baseweb="popover"],
 [data-baseweb="menu"],
