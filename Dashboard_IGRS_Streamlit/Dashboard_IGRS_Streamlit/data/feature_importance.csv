@@ -1,0 +1,9 @@
+feature,mean_abs_shap
+semantic_dup_score,2.2611156
+semantic_similarity_score,1.047904
+lexical_similarity_score,1.0381113
+sna_out_deg,0.6145426
+content_dup_score,0.44518235
+posting_freq_per_hour,0.28744742
+temporal_burst_score,0.14823903
+sna_in_deg,0.0

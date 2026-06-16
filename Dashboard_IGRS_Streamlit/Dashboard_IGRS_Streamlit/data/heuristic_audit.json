@@ -1,0 +1,1 @@
+{"heuristic_accuracy": 0.85, "heuristic_recall": 0.72, "ai_accuracy": 0.885, "ai_recall": 0.794, "improvement_note": "Model AI meningkatkan Recall sebesar 7.4%, mengurangi buzzer yang lolos (False Negatives)."}
