@@ -242,6 +242,16 @@ div[data-testid="stButton"] button:hover {
     border-color: #A8472F !important;
     color: #FFFFFF !important;
 }
+
+/* Force all Plotly legend text and chart labels/titles to be dark/black */
+g.legend text,
+text.legendtext,
+g.xtick text,
+g.ytick text,
+g.gtitle text,
+g.annotation text {
+    fill: #211E17 !important;
+}
 """
 
 st.markdown("<style>" + CSS + "</style>", unsafe_allow_html=True)
