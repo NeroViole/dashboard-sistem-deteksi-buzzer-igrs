@@ -1020,8 +1020,8 @@ with tab4:
     if event_sna and "selection" in event_sna and "points" in event_sna["selection"] and event_sna["selection"]["points"]:
         pt = event_sna["selection"]["points"][0]
         txt = pt.get("text") or pt.get("hovertext")
-        if txt and txt.startswith("@"):
-            clicked_user = txt[1:]
+        if txt and "@" in txt:
+            clicked_user = txt[txt.find("@")+1:]
             if st.session_state["selected_sna_account"] != clicked_user:
                 st.session_state["selected_sna_account"] = clicked_user
                 st.rerun()
